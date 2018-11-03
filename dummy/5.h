@@ -1,5 +1,1 @@
-#include <stdlib.h>
-
-int main(){
-  return 0;
-}
+int hi(int x, double c, char *w);

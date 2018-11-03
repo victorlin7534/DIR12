@@ -3,6 +3,6 @@ default: main.o
 main.o: main.c
 	gcc -c main.c
 run:
-	./test
+	./test $(args)
 clean:
-	rm -f *out *exe *o test	
+	rm -f *out *exe *o test*
