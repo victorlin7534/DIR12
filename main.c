@@ -30,7 +30,7 @@ double la(DIR *directory,double size,int sp){
   	printf("directory size: %.3lf KB\n",size/1000.0);
   	return size;
 }
-
+/*
 int main(int argc, char *argv[]){
 	char *dir = argv[1];
 	while(!opendir(dir)){
@@ -43,5 +43,49 @@ int main(int argc, char *argv[]){
 	la(directory,0,0);
 	closedir(directory);
 
+	return 0;
+}
+*/
+int main(int argc, char *argv[]){
+	DIR *directory;
+	long size=0;
+	char *dir = malloc(20);
+	if(argc > 1){
+		dir = argv[1];
+	}
+	else{
+		printf("Enter directory:\n");
+		fgets(dir,20,stdin);
+		dir[strlen(dir)-1]=0;
+		printf("\n");
+	}
+	struct dirent *cur;
+	struct stat file;
+	directory = opendir(dir);
+	printf("Directories:\n");
+	while(cur = readdir(directory)){
+		if(cur->d_type==DT_DIR){
+			printf("%s\n ",cur->d_name);
+			stat(cur->d_name,&file);
+			size += file.st_size;
+		}
+	}
+	printf("\nRegular files:\n\n");
+	directory = opendir(dir);
+	while(cur = readdir(directory)){
+		if(cur->d_type==DT_REG){
+			printf("%s ",cur->d_name);
+			stat(cur->d_name,&file);
+			if (file.st_size>1000){
+				printf("file: %s %.3lf KB\n",cur->d_name,file.st_size/1000.0);
+			}
+			else{
+				printf("file: %s %ld B\n",cur->d_name,file.st_size);
+			}
+			size += file.st_size;
+		}
+	}
+	printf("\nTotal directory size: %.3lf KB\n",size/1000.0);
+	closedir(directory);
 	return 0;
 }
